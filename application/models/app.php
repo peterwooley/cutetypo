@@ -22,7 +22,9 @@ class App extends CI_Model {
 
 	public function set($token, $name)
 	{
-		//$this->db->
+		$result = $this->db->where("token", $token)->update("apps", array("name" => $name));
+		return $result;
+
 	}
 
 }

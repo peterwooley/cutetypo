@@ -1,6 +1,7 @@
+
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Name extends CI_Controller {
+class Message extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -11,27 +12,28 @@ class Name extends CI_Controller {
 	}
 	
 	/**
-	 * Gets the current App name with a given token.
+	 * Gets messages from the last hour (default) or since any time you specify.
 	 */
 	public function get() {
-		$this->load->model("app");
+		$this->load->model("message_model");
 		
-		Render::json($this->app->get($this->input->get_post("token")));
+		$results = $this->message_model->get(
+			$this->input->get_post("token"),
+			$this->input->get_post("since")
+		);
+		Render::json($results);
 	}
 
 	/**
-	 * Sets a new App name for the given token.
+	 * Sends a message.
 	 */
-	public function set() {
-		$this->load->model("app");
+	public function send() {
+		$this->load->model("message_model");
 		
-		//$this->load->library("FirePHPCore/fb");
-		//$fp = FirePHP::getInstance(true);
-		//$fp->warn('$token', $token);
-		
-		$result = $this->app->set(
+		$result = $this->message_model->send(
 			$this->input->get_post("token"),
-			$this->input->get_post("name")
+			$this->input->get_post("message"),
+			$this->input->get_post("username")
 		);
 
 		Render::json($result);
